@@ -1,0 +1,137 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <numeric> // Для std::accumulate
+
+// Класс Студент
+class Student {
+private:
+    std::string fullName;    // Полное имя студента
+    int yearsOld;            // Возраст студента
+    double averageGrade;     // Средний балл
+    std::string studentID;   // Идентификационный номер
+    std::string department;  // Факультет
+    std::vector<double> marks; // Оценки
+
+    // Приватный метод для пересчета среднего балла
+    void recalculateGPA() {
+        if (!marks.empty()) {
+            double total = std::accumulate(marks.begin(), marks.end(), 0.0); // Сумма всех оценок
+            averageGrade = total / marks.size(); // Расчет среднего значения
+        }
+    }
+
+public:
+    // Конструктор с параметрами
+    Student(const std::string &fullName, int yearsOld, const std::string &studentID, const std::string &department)
+        : fullName(fullName), yearsOld(yearsOld), studentID(studentID), department(department), averageGrade(0.0) {}
+
+    // Методы доступа к данным (геттеры)
+    std::string getFullName() const {
+        return fullName;
+    }
+
+    int getYearsOld() const {
+        return yearsOld;
+    }
+
+    double getAverageGrade() const {
+        return averageGrade;
+    }
+
+    std::string getStudentID() const {
+        return studentID;
+    }
+
+    std::string getDepartment() const {
+        return department;
+    }
+
+    std::vector<double> getMarks() const {
+        return marks;
+    }
+
+    // Методы для изменения данных (сеттеры)
+    void setFullName(const std::string &fullName) {
+        this->fullName = fullName;
+    }
+
+    void setYearsOld(int yearsOld) {
+        this->yearsOld = yearsOld;
+    }
+
+    void setStudentID(const std::string &studentID) {
+        this->studentID = studentID;
+    }
+
+    void setDepartment(const std::string &department) {
+        this->department = department;
+    }
+
+    // Метод для добавления новой оценки
+    void addMark(double mark) {
+        marks.push_back(mark); // Добавление новой оценки в список
+        recalculateGPA(); // Пересчет среднего балла
+    }
+
+    // Определение итоговой оценки по среднему баллу
+    std::string determineGrade() const {
+        if (averageGrade > 8.0) {
+            return "Отлично";
+        } else if (averageGrade >= 6.0) {
+            return "Хорошо";
+        } else if (averageGrade >= 4.0) {
+            return "Удовлетворительно";
+        } else {
+            return "Неудовлетворительно";
+        }
+    }
+
+    // Вывод всей информации о студенте
+    void displayInfo() const {
+        std::cout << "Имя: " << fullName 
+                  << ", Возраст: " << yearsOld 
+                  << ", ID: " << studentID 
+                  << ", Факультет: " << department 
+                  << ", Средний балл: " << averageGrade 
+                  << ", Итоговая оценка: " << determineGrade() << std::endl;
+    }
+};
+
+int main() {
+    // Создание экземпляров класса Student
+    Student student1("Иван Иванов", 20, "S12345", "Компьютерные науки");
+    Student student2("Алексей Смирнов", 21, "S12346", "Математика");
+    Student student3("Мария Кузнецова", 19, "S12347", "Физика");
+    Student student4("Анна Петрова", 22, "S12348", "Химия");
+
+    // Добавление оценок студентам
+    student1.addMark(9.2);
+    student1.addMark(8.5);
+
+    student2.addMark(7.5);
+    student2.addMark(6.8);
+
+    student3.addMark(5.8);
+    student3.addMark(6.2);
+
+    student4.addMark(3.5);
+    student4.addMark(4.0);
+
+    // Вывод информации о студентах
+    student1.displayInfo();
+    student2.displayInfo();
+    student3.displayInfo();
+    student4.displayInfo();
+
+    // Обновление данных студента 3
+    student3.setFullName("Мария Кузьмина");
+    student3.setYearsOld(20);
+    student3.setDepartment("Астрономия");
+    student3.addMark(7.0); // Добавление новой оценки
+
+    // Вывод обновленной информации о студенте 3
+    student3.displayInfo();
+
+    return 0;
+}
